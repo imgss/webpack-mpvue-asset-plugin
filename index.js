@@ -1,7 +1,7 @@
 function MpvuePlugin() {}
 
 MpvuePlugin.prototype.apply = function(compiler) {
-  const {options: {entry, plugins}} = compiler;
+  const {options: {entry, output: {publicPath}, plugins}} = compiler;
   compiler.plugin('emit', function(compilation, callback) {
     let commonsChunkNames = [];
     // 获取所有的 chunk name
@@ -25,7 +25,7 @@ MpvuePlugin.prototype.apply = function(compiler) {
           try {
             if (compilation.assets[wxssFile]) {
               let wxss = compilation.assets[wxssFile].source();
-              wxss = `@import "/${commonWxssFile}";\n${wxss}`;
+              wxss = `@import "${publicPath}/${commonWxssFile}";\n${wxss}`;
               compilation.assets[wxssFile].source = () => wxss;
             }
           } catch (error) {
